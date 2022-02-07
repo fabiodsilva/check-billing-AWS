@@ -49,4 +49,4 @@ echo "##############################################################" >> ./Billi
 
 #Envia e-mail
 
-echo -e "Subject:Billing diario - Account Name \n\n Good Morning, \n\n Here the last 7 days billing \n\n `cat ./Billing.txt`" | /usr/sbin/sendmail -F "Parceiro Ambev" -f "from <alarm@mail.billing.com>" -t "to <your-e-mail>; <second-mail> "
+echo -e "Subject:Billing diario - Account Name \n\n Good Morning, \n\n Here the last 7 days billing \n\n `cat ./Billing.txt`" | /usr/sbin/sendmail -F "Daily Billing" -f "from <alarm@mail.billing.com>" -t "to <your-e-mail>; <second-mail> "

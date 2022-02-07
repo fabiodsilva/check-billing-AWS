@@ -16,7 +16,7 @@ echo "##############################################################" > ./Billin
 echo "" >> ./Billing.txt
 while [ $START -gt 0 ]
 do
-VALUE=$(aws ce get-cost-and-usage --time-period Start=$(date +"%Y-%m-%d" --date="-$START days"),End=$(date +"%Y-%m-%d" --date="-$(expr $START - 1) days" ) --granularity DAILY  --metrics  "UnblendedCost" --output text | grep UNBLENDEDCOS | awk '{ print $2 }')
+VALUE=$(aws ce get-cost-and-usage --time-period Start=$(date +"%Y-%m-%d" --date="-$START days"),End=$(date +"%Y-%m-%d" --date="-$(expr $START - 1) days" ) --granularity DAILY --metrics  "UnblendedCost" --output text | grep UNBLENDEDCOS | awk '{ print $2 }')
 
 DATES=$(date +"%Y-%m-%d" --date="-$START days")
 
@@ -37,7 +37,7 @@ MEDIA=`echo "$TOTAL / $1" | bc`
 echo MEDIA=$MEDIA >> ./Billing.txt
 
 
-VALUE=$(aws ce get-cost-and-usage --time-period Start=$(date +"%Y-%m-%d"),End=$(date +"%Y-%m-%d" --date=+1days) --granularity DAILY  --metrics  "UnblendedCost" --output text | grep UNBLENDEDCOST | awk '{ print $2 }')
+VALUE=$(aws ce get-cost-and-usage --time-period Start=$(date +"%Y-%m-%d"),End=$(date +"%Y-%m-%d" --date=+1days) --granularity DAILY --metrics "UnblendedCost" --output text | grep UNBLENDEDCOST | awk '{ print $2 }')
 DATES=$(date +"%Y-%m-%d")
 
 echo "" >> ./Billing.txt

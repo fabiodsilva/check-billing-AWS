@@ -27,14 +27,13 @@ echo $DATES - $VALUE >> ./Billing.txt
 
 START=$(( $START -1 ))
 DAY=$(( $DAY -1 ))
-TOTAL=`calc $VALUE + $TOTAL`
-
+TOTAL=`echo "$VALUE + $TOTAL" | bc`
 done
 
 echo "" >> ./Billing.txt
 echo TOTAL=$TOTAL >> ./Billing.txt
 echo "" >> ./Billing.txt
-MEDIA=`calc $TOTAL / $1`
+MEDIA=`echo "$TOTAL / $1" | bc`
 echo MEDIA=$MEDIA >> ./Billing.txt
 
 

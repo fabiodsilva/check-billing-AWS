@@ -1,0 +1,52 @@
+
+# vi check-billing-daily.sh
+#!/bin/bash
+
+# By Fabio Donizeti fabiodsilva@yahoo.com.br
+# This script collect daily billing from AWS.
+
+
+START=$1
+
+DAY=$(expr $(date +%d) + 1)
+#echo $DAY
+TOTAL=0
+
+echo "##############################################################" > ./Billing.txt
+echo "" >> ./Billing.txt
+while [ $START -gt 0 ]
+do
+VALUE=$(aws ce get-cost-and-usage --time-period Start=$(date +"%Y-%m-%d" --date="-$START days"),End=$(date +"%Y-%m-%d" --date="-$(expr $START - 1) days" ) --granularity DAILY  --metrics  "UnblendedCost" --output text | grep UNBLENDEDCOS | awk '{ print $2 }')
+
+DATES=$(date +"%Y-%m-%d" --date="-$START days")
+
+#DATEE=$(date +"%Y-%m-%d"  --date="-$(expr $START - 1) days" )
+#echo START:$START
+
+echo $DATES - $VALUE >> ./Billing.txt
+
+START=$(( $START -1 ))
+DAY=$(( $DAY -1 ))
+TOTAL=`calc $VALUE + $TOTAL`
+
+done
+
+echo "" >> ./Billing.txt
+echo TOTAL=$TOTAL >> ./Billing.txt
+echo "" >> ./Billing.txt
+MEDIA=`calc $TOTAL / $1`
+echo MEDIA=$MEDIA >> ./Billing.txt
+
+
+VALUE=$(aws ce get-cost-and-usage --time-period Start=$(date +"%Y-%m-%d"),End=$(date +"%Y-%m-%d" --date=+1days) --granularity DAILY  --metrics  "UnblendedCost" --output text | grep UNBLENDEDCOST | awk '{ print $2 }')
+DATES=$(date +"%Y-%m-%d")
+
+echo "" >> ./Billing.txt
+echo "$DATES - $VALUE  <-- Parcial do dia"  >> ./Billing.txt
+echo "" >> ./Billing.txt
+echo "Data da Coleta - `date +"%Y-%m-%d %H:%M"`" >> ./Billing.txt
+echo "##############################################################" >> ./Billing.txt
+
+#Envia e-mail
+
+echo -e "Subject:Billing diario - Account Name \n\n Good Morning, \n\n Here the last 7 days billing \n\n `cat ./Billing.txt`" | /usr/sbin/sendmail -F "Parceiro Ambev" -f "from <alarm@mail.billing.com>" -t "to <your-e-mail>; <second-mail> "
